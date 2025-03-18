@@ -1,0 +1,180 @@
+2025-03-18 00:00:20,718 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:00:20,718 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:00:28,560 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.84 seconds
+2025-03-18 00:00:28,562 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:00:28,562 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp5q0vlqz3']
+2025-03-18 00:00:28,562 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:00:28,566 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.3:8080
+2025-03-18 00:00:28,567 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-18 00:00:28,567 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:00:28,708 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:00:28,708 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:00:35,668 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 6.96 seconds
+2025-03-18 00:00:35,670 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:00:35,671 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp6ucr060g']
+2025-03-18 00:00:35,671 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:00:35,673 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:00:35,673 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:00:35,723 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:00:35] "GET / HTTP/1.1" 200 -
+2025-03-18 00:00:36,637 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:00:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-03-18 00:03:10,666 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:03:10,666 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:03:15,575 - werkzeug - INFO -  * Detected change in '/home/laptop/.cache/torch/hub/ultralytics_yolov5_master/utils/plots.py', reloading
+2025-03-18 00:03:16,380 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:03:16,521 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:03:16,521 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:03:18,474 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.81 seconds
+2025-03-18 00:03:18,476 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:03:18,477 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmpfpq7ewx9']
+2025-03-18 00:03:18,477 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:03:23,683 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.16 seconds
+2025-03-18 00:03:23,685 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:03:23,685 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp01sy5h8s']
+2025-03-18 00:03:23,685 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:03:23,688 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:03:23,689 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:03:33,293 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:03:33,294 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:03:40,941 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.65 seconds
+2025-03-18 00:03:40,943 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:03:40,943 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmpmiemt0vp']
+2025-03-18 00:03:40,943 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:03:40,947 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.3:8080
+2025-03-18 00:03:40,948 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-18 00:03:40,948 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:03:41,095 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:03:41,095 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:03:48,437 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.34 seconds
+2025-03-18 00:03:48,439 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:03:48,439 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp71xlppeg']
+2025-03-18 00:03:48,439 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:03:48,442 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:03:48,442 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:03:48,490 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:03:48] "GET / HTTP/1.1" 200 -
+2025-03-18 00:04:00,245 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:04:00] "[36mGET / HTTP/1.1[0m" 304 -
+2025-03-18 00:04:04,485 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:04:04] "[36mGET / HTTP/1.1[0m" 304 -
+2025-03-18 00:05:46,519 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:05:46] "[36mGET / HTTP/1.1[0m" 304 -
+2025-03-18 00:07:19,496 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:07:19,496 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:07:27,758 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 8.26 seconds
+2025-03-18 00:07:27,760 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:07:27,760 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmplqmvyn_p']
+2025-03-18 00:07:27,760 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:07:27,764 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.3:8080
+2025-03-18 00:07:27,764 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-18 00:07:27,765 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:07:27,900 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:07:27,900 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:07:35,441 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.54 seconds
+2025-03-18 00:07:35,443 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:07:35,444 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmpw83_1cc2']
+2025-03-18 00:07:35,444 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:07:35,448 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:07:35,448 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:07:35,506 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:07:35] "GET / HTTP/1.1" 200 -
+2025-03-18 00:07:36,270 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:07:36] "GET / HTTP/1.1" 200 -
+2025-03-18 00:07:50,362 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:07:50] "[36mGET / HTTP/1.1[0m" 304 -
+2025-03-18 00:11:21,203 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:11:21,203 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:11:29,498 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 8.29 seconds
+2025-03-18 00:11:29,500 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:11:29,500 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmpe2dwl75c']
+2025-03-18 00:11:29,500 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:11:29,504 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.3:8080
+2025-03-18 00:11:29,504 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-18 00:11:29,505 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:11:29,634 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:11:29,634 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:11:37,158 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 7.52 seconds
+2025-03-18 00:11:37,160 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:11:37,160 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp0d1b28_i']
+2025-03-18 00:11:37,161 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:11:37,163 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:11:37,163 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:11:37,213 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:11:37] "GET / HTTP/1.1" 200 -
+2025-03-18 00:11:37,213 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:11:37] "GET / HTTP/1.1" 200 -
+2025-03-18 00:11:57,297 - __main__ - INFO - Received detection request
+2025-03-18 00:11:57,301 - __main__ - INFO - Processing file: lata-6179995_1280.jpg
+2025-03-18 00:11:57,302 - __main__ - INFO - Processing image for trash detection: /tmp/lata-6179995_1280.jpg
+2025-03-18 00:11:57,444 - __main__ - INFO - Detection completed in 0.14 seconds. Found 0 items.
+2025-03-18 00:11:57,444 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:11:57] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:11:59,111 - __main__ - INFO - Received detection request
+2025-03-18 00:11:59,112 - __main__ - INFO - Processing file: lata-6179995_1280.jpg
+2025-03-18 00:11:59,113 - __main__ - INFO - Processing image for trash detection: /tmp/lata-6179995_1280.jpg
+2025-03-18 00:11:59,282 - __main__ - INFO - Detection completed in 0.17 seconds. Found 0 items.
+2025-03-18 00:11:59,283 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:11:59] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:12:06,178 - __main__ - INFO - Received detection request
+2025-03-18 00:12:06,181 - __main__ - INFO - Processing file: photo_5801068205240861941_x.jpg
+2025-03-18 00:12:06,181 - __main__ - INFO - Processing image for trash detection: /tmp/photo_5801068205240861941_x.jpg
+2025-03-18 00:12:06,341 - __main__ - INFO - Detection completed in 0.16 seconds. Found 1 items.
+2025-03-18 00:12:06,341 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:12:06] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:12:42,849 - __main__ - INFO - Received detection request
+2025-03-18 00:12:42,853 - __main__ - INFO - Processing file: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:12:42,854 - __main__ - ERROR - Invalid file type: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:12:42,854 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:12:42] "[31m[1mPOST /detect HTTP/1.1[0m" 400 -
+2025-03-18 00:12:45,448 - __main__ - INFO - Received detection request
+2025-03-18 00:12:45,451 - __main__ - INFO - Processing file: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:12:45,451 - __main__ - ERROR - Invalid file type: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:12:45,451 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:12:45] "[31m[1mPOST /detect HTTP/1.1[0m" 400 -
+2025-03-18 00:15:31,931 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:15:31,931 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:15:36,257 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 4.33 seconds
+2025-03-18 00:15:36,259 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:15:36,259 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmpo8ycip_t']
+2025-03-18 00:15:36,259 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:15:36,264 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.1.3:8080
+2025-03-18 00:15:36,264 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-03-18 00:15:36,264 - werkzeug - INFO -  * Restarting with stat
+2025-03-18 00:15:36,402 - __main__ - INFO - Starting Trash Detection Server
+2025-03-18 00:15:36,402 - __main__ - INFO - Attempting to import ML_Processing_Module...
+2025-03-18 00:15:40,083 - __main__ - INFO - Successfully imported ML_Processing_Module. Model loading took 3.68 seconds
+2025-03-18 00:15:40,085 - __main__ - INFO - Current directory: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase
+2025-03-18 00:15:40,086 - __main__ - INFO - Python path: ['/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/functions/src', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/venv/lib/python3.13/site-packages', '/tmp/tmp1_l196ll']
+2025-03-18 00:15:40,086 - __main__ - INFO - Static folder: /home/laptop/Documents/work/yousef/esp32-cam 1/the ml vision model , website/the ml vision model to firebase/public
+2025-03-18 00:15:40,090 - werkzeug - WARNING -  * Debugger is active!
+2025-03-18 00:15:40,091 - werkzeug - INFO -  * Debugger PIN: 541-264-024
+2025-03-18 00:15:40,144 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:40] "GET / HTTP/1.1" 200 -
+2025-03-18 00:15:40,145 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:40] "GET / HTTP/1.1" 200 -
+2025-03-18 00:15:40,146 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:40] "GET / HTTP/1.1" 200 -
+2025-03-18 00:15:40,150 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:40] "[36mGET / HTTP/1.1[0m" 304 -
+2025-03-18 00:15:48,007 - __main__ - INFO - Received detection request
+2025-03-18 00:15:48,011 - __main__ - INFO - Processing file: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:15:48,011 - __main__ - INFO - Processing image for trash detection: /tmp/garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:15:48,069 - __main__ - INFO - Received detection request
+2025-03-18 00:15:48,072 - __main__ - INFO - Processing file: garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:15:48,073 - __main__ - INFO - Processing image for trash detection: /tmp/garvage-group-plastic-containers-glass-cans-paper-white-background_67651-9307.avif
+2025-03-18 00:15:53,109 - __main__ - INFO - Received detection request
+2025-03-18 00:15:53,111 - __main__ - INFO - Processing file: lata-6179995_1280.jpg
+2025-03-18 00:15:53,112 - __main__ - INFO - Processing image for trash detection: /tmp/lata-6179995_1280.jpg
+2025-03-18 00:15:53,227 - __main__ - INFO - Detection completed in 0.12 seconds. Found 0 items.
+2025-03-18 00:15:53,228 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:53] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:15:55,996 - __main__ - INFO - Received detection request
+2025-03-18 00:15:55,999 - __main__ - INFO - Processing file: lata-6179995_1280.jpg
+2025-03-18 00:15:56,000 - __main__ - INFO - Processing image for trash detection: /tmp/lata-6179995_1280.jpg
+2025-03-18 00:15:56,164 - __main__ - INFO - Detection completed in 0.16 seconds. Found 0 items.
+2025-03-18 00:15:56,164 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:15:56] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:16:00,621 - __main__ - INFO - Received detection request
+2025-03-18 00:16:00,623 - __main__ - INFO - Processing file: photo_5801068205240861941_x.jpg
+2025-03-18 00:16:00,623 - __main__ - INFO - Processing image for trash detection: /tmp/photo_5801068205240861941_x.jpg
+2025-03-18 00:16:00,818 - __main__ - INFO - Detection completed in 0.20 seconds. Found 1 items.
+2025-03-18 00:16:00,819 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:16:00] "POST /detect HTTP/1.1" 200 -
+2025-03-18 00:18:27,438 - __main__ - INFO - Received detection request
+2025-03-18 00:18:27,446 - __main__ - INFO - Processing file: Screenshot From 2025-03-18 00-18-10.png
+2025-03-18 00:18:27,450 - __main__ - INFO - Processing image for trash detection: /tmp/Screenshot_From_2025-03-18_00-18-10.png
+2025-03-18 00:18:27,645 - __main__ - INFO - Detection completed in 0.20 seconds. Found 4 items.
+2025-03-18 00:18:27,646 - werkzeug - INFO - 127.0.0.1 - - [18/Mar/2025 00:18:27] "POST /detect HTTP/1.1" 200 -

@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /uploads/{imageId} {
+      allow read: if true;  // Anyone can read uploaded images
+      allow write: if request.resource.size < 5 * 1024 * 1024  // Max 5MB
+                  && request.resource.contentType.matches('image/.*');  // Must be an image
+    }
+  }
+} 

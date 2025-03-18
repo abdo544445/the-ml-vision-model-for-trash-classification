@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+functions/node_modules/
+functions/venv/
+
+# Build output
+functions/lib/
+functions/build/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Environment variables
+.env
+functions/.env
+firebase-credentials.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db 

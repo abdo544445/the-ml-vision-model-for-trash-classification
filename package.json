@@ -1,0 +1,11 @@
+{
+  "name": "ai-object-detection",
+  "version": "1.0.0",
+  "description": "AI Object Detection with Firebase",
+  "scripts": {
+    "firebase": "./node_modules/.bin/firebase"
+  },
+  "dependencies": {
+    "firebase-tools": "^13.0.2"
+  }
+} 

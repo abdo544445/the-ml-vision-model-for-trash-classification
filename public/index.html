@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trash Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add TensorFlow.js - use a specific version known to be stable -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
+    <!-- Add TensorFlow.js coco-ssd model - use a specific version known to be stable -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+    <!-- Add fallback information -->
+    <script>
+        // Detect browser compatibility
+        window.addEventListener('DOMContentLoaded', (event) => {
+            if (!window.tf) {
+                console.error("TensorFlow.js failed to load - browser might not be compatible");
+                document.getElementById('browserCompatWarning').classList.remove('hidden');
+            }
+        });
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">AI Trash Detection</h1>
+        
+        <!-- Browser compatibility warning -->
+        <div id="browserCompatWarning" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+            <p class="font-bold">Warning: Browser Compatibility Issue</p>
+            <p>TensorFlow.js may not work correctly in your browser. Please use server processing mode or try a modern browser like Chrome, Edge, or Firefox.</p>
+        </div>
+        
+        <!-- Processing Mode Selection -->
+        <div class="flex justify-center space-x-4 mb-4">
+            <button id="serverModeBtn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                Server Processing
+            </button>
+            <button id="browserModeBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                Browser Processing
+            </button>
+        </div>
+        
+        <!-- Input Selection -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="uploadBtn" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                Image Upload
+            </button>
+            <button id="videoBtn" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors">
+                Video Upload
+            </button>
+            <button id="webcamBtn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors">
+                Use Webcam
+            </button>
+            <button id="esp32CamBtn" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                ESP32-CAM Feed
+            </button>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="uploadSection" class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Upload Image</h2>
+            <div class="flex flex-col items-center">
+                <input type="file" id="imageInput" accept="image/*" class="hidden">
+                <label for="imageInput" class="bg-blue-500 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-600 transition-colors">
+                    Select Image
+                </label>
+                <div id="preview" class="mt-4 hidden">
+                    <img id="imagePreview" class="max-w-md rounded-lg shadow-md">
+                    <canvas id="detectionCanvas" class="mt-4 max-w-md rounded-lg shadow-md"></canvas>
+                </div>
+                <button id="detectButton" class="mt-4 bg-purple-500 text-white px-6 py-3 rounded-lg hidden hover:bg-purple-600 transition-colors">
+                    Detect Objects
+                </button>
+                <button id="downloadImage" class="mt-4 bg-green-500 text-white px-6 py-3 rounded-lg hidden hover:bg-green-600 transition-colors">
+                    Download Processed Image
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Upload Section -->
+        <div id="videoSection" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Upload Video</h2>
+            <div class="flex flex-col items-center">
+                <input type="file" id="videoInput" accept="video/*" class="hidden">
+                <label for="videoInput" class="bg-purple-500 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-purple-600 transition-colors">
+                    Select Video
+                </label>
+                <div id="videoPreview" class="mt-4 hidden">
+                    <video id="videoPlayer" class="max-w-md rounded-lg shadow-md" controls></video>
+                    <canvas id="videoCanvas" class="mt-4 max-w-md rounded-lg shadow-md"></canvas>
+                </div>
+                <div class="mt-4 space-x-4">
+                    <button id="startVideoDetection" class="bg-purple-500 text-white px-6 py-3 rounded-lg hidden hover:bg-purple-600 transition-colors">
+                        Start Detection
+                    </button>
+                    <button id="stopVideoDetection" class="bg-red-500 text-white px-6 py-3 rounded-lg hidden hover:bg-red-600 transition-colors">
+                        Stop Detection
+                    </button>
+                    <button id="downloadVideo" class="bg-green-500 text-white px-6 py-3 rounded-lg hidden hover:bg-green-600 transition-colors">
+                        Download Processed Video
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Webcam Section -->
+        <div id="webcamSection" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Webcam Feed</h2>
+            <div class="flex flex-col items-center">
+                <video id="webcam" class="max-w-md rounded-lg shadow-md" autoplay playsinline></video>
+                <canvas id="webcamCanvas" class="mt-4 max-w-md rounded-lg shadow-md hidden"></canvas>
+                <div class="mt-4 space-x-4">
+                    <button id="startWebcam" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors">
+                        Start Webcam
+                    </button>
+                    <button id="startWebcamDetection" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors hidden">
+                        Start Detection
+                    </button>
+                    <button id="stopWebcamDetection" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors hidden">
+                        Stop Detection
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESP32-CAM Section -->
+        <div id="esp32CamSection" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-2xl font-semibold mb-4">ESP32-CAM Feed</h2>
+            <div class="flex flex-col items-center">
+                <div class="mb-4">
+                    <label for="esp32CamUrl" class="block text-sm font-medium text-gray-700 mb-2">ESP32-CAM IP Address:</label>
+                    <div class="flex">
+                        <input type="text" id="esp32CamUrl" class="border border-gray-300 rounded-lg px-4 py-2 w-64" 
+                               placeholder="e.g., 192.168.1.100" value="">
+                        <button id="connectEsp32Cam" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            Connect
+                        </button>
+                    </div>
+                </div>
+                <div id="esp32CamPreview" class="relative">
+                    <img id="esp32CamImage" class="max-w-md rounded-lg shadow-md" alt="ESP32-CAM Feed">
+                    <canvas id="esp32CamCanvas" class="absolute top-0 left-0 max-w-md rounded-lg"></canvas>
+                </div>
+                <div class="mt-4 space-x-4">
+                    <button id="startEsp32Detection" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors hidden">
+                        Start Detection
+                    </button>
+                    <button id="stopEsp32Detection" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors hidden">
+                        Stop Detection
+                    </button>
+                    <button id="captureEsp32Image" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors hidden">
+                        Capture Image
+                    </button>
+                </div>
+                <div id="esp32Status" class="mt-4 text-center font-medium"></div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="bg-white rounded-lg shadow-md p-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Detection Results</h2>
+            <div id="detectionResults" class="space-y-4">
+                <!-- Results will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                <p class="mt-4 text-center">Processing...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadSection = document.getElementById('uploadSection');
+        const videoSection = document.getElementById('videoSection');
+        const webcamSection = document.getElementById('webcamSection');
+        const esp32CamSection = document.getElementById('esp32CamSection');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const videoBtn = document.getElementById('videoBtn');
+        const webcamBtn = document.getElementById('webcamBtn');
+        const esp32CamBtn = document.getElementById('esp32CamBtn');
+        const serverModeBtn = document.getElementById('serverModeBtn');
+        const browserModeBtn = document.getElementById('browserModeBtn');
+        const imageInput = document.getElementById('imageInput');
+        const videoInput = document.getElementById('videoInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoPreview = document.getElementById('videoPreview');
+        const preview = document.getElementById('preview');
+        const detectButton = document.getElementById('detectButton');
+        const startVideoDetection = document.getElementById('startVideoDetection');
+        const stopVideoDetection = document.getElementById('stopVideoDetection');
+        const results = document.getElementById('results');
+        const detectionResults = document.getElementById('detectionResults');
+        const loading = document.getElementById('loading');
+        const webcam = document.getElementById('webcam');
+        const startWebcam = document.getElementById('startWebcam');
+        const webcamCanvas = document.getElementById('webcamCanvas');
+        const startWebcamDetection = document.getElementById('startWebcamDetection');
+        const stopWebcamDetection = document.getElementById('stopWebcamDetection');
+        const videoCanvas = document.getElementById('videoCanvas');
+        const downloadVideo = document.getElementById('downloadVideo');
+        const detectionCanvas = document.getElementById('detectionCanvas');
+        const downloadImage = document.getElementById('downloadImage');
+
+        let isVideoProcessing = false;
+        let videoDetectionInterval;
+        let isWebcamProcessing = false;
+        let webcamDetectionInterval;
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        // Add API configuration
+        const API_HOST = window.location.hostname === 'localhost' ? 'http://localhost:8080' : window.location.origin;
+
+        // Add processing mode state
+        let processingMode = 'server'; // 'server' or 'browser'
+        let tfModel = null; // Will hold the TensorFlow.js model when loaded
+        let modelLoadingAttempted = false; // Track if we've tried loading the model
+        
+        // Add trash categories mapping for browser-based detection
+        const TRASH_CATEGORIES = {
+            // Plastic items
+            'bottle': 'plastic',
+            'plastic bottle': 'plastic',
+            'water bottle': 'plastic',
+            'soda bottle': 'plastic',
+            'plastic container': 'plastic',
+            'plastic cup': 'plastic',
+            'jerry can': 'plastic',
+            'jug': 'plastic',
+            'plastic bag': 'plastic',
+            
+            // Paper items
+            'cup': 'paper',
+            'book': 'paper',
+            'newspaper': 'paper',
+            'cardboard': 'paper',
+            'cardboard box': 'paper',
+            'carton': 'paper',
+            
+            // Glass items
+            'wine glass': 'glass',
+            'bowl': 'glass',
+            'vase': 'glass',
+            'glass bottle': 'glass',
+            'wine bottle': 'glass',
+            'beer bottle': 'glass',
+            
+            // Metal items
+            'fork': 'metal',
+            'knife': 'metal',
+            'spoon': 'metal',
+            'can': 'metal',
+            'scissors': 'metal',
+            
+            // Organic items
+            'banana': 'organic',
+            'apple': 'organic',
+            'sandwich': 'organic',
+            'orange': 'organic',
+            'broccoli': 'organic',
+            'carrot': 'organic',
+            'hot dog': 'organic',
+            'pizza': 'organic',
+            'donut': 'organic',
+            'cake': 'organic',
+            'potted plant': 'organic',
+            
+            // Mixed/furniture items
+            'chair': 'mixed',
+            'couch': 'mixed',
+            'bed': 'mixed',
+            'dining table': 'mixed',
+            'toilet': 'mixed',
+            'teddy bear': 'mixed',
+            
+            // Electronic items
+            'tv': 'electronic',
+            'laptop': 'electronic',
+            'mouse': 'electronic',
+            'remote': 'electronic',
+            'keyboard': 'electronic',
+            'cell phone': 'electronic',
+            'clock': 'electronic',
+        };
+
+        // Switch between sections
+        uploadBtn.addEventListener('click', () => {
+            uploadSection.classList.remove('hidden');
+            videoSection.classList.add('hidden');
+            webcamSection.classList.add('hidden');
+            esp32CamSection.classList.add('hidden');
+            results.classList.add('hidden');
+        });
+
+        videoBtn.addEventListener('click', () => {
+            videoSection.classList.remove('hidden');
+            uploadSection.classList.add('hidden');
+            webcamSection.classList.add('hidden');
+            esp32CamSection.classList.add('hidden');
+            results.classList.add('hidden');
+        });
+
+        webcamBtn.addEventListener('click', () => {
+            webcamSection.classList.remove('hidden');
+            uploadSection.classList.add('hidden');
+            videoSection.classList.add('hidden');
+            esp32CamSection.classList.add('hidden');
+            results.classList.add('hidden');
+        });
+
+        esp32CamBtn.addEventListener('click', () => {
+            esp32CamSection.classList.remove('hidden');
+            uploadSection.classList.add('hidden');
+            videoSection.classList.add('hidden');
+            webcamSection.classList.add('hidden');
+            results.classList.add('hidden');
+        });
+
+        // Switch between processing modes
+        serverModeBtn.addEventListener('click', () => {
+            processingMode = 'server';
+            serverModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+            serverModeBtn.classList.add('bg-blue-500', 'text-white');
+            browserModeBtn.classList.remove('bg-blue-500', 'text-white');
+            browserModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+            
+            // Hide the loading indicator if it's still showing
+            loading.classList.add('hidden');
+        });
+        
+        browserModeBtn.addEventListener('click', async () => {
+            // If we've already tried and failed to load the model, warn the user
+            if (modelLoadingAttempted && !tfModel) {
+                alert("Browser-based processing failed to initialize previously. Please try reloading the page or use server processing.");
+                serverModeBtn.click();
+                return;
+            }
+            
+            // Show loading indicator immediately
+            loading.classList.remove('hidden');
+            document.querySelector('#loading p').textContent = "Loading browser model...";
+            
+            // UI changes
+            processingMode = 'browser';
+            browserModeBtn.classList.remove('bg-gray-300', 'text-gray-700');
+            browserModeBtn.classList.add('bg-blue-500', 'text-white');
+            serverModeBtn.classList.remove('bg-blue-500', 'text-white');
+            serverModeBtn.classList.add('bg-gray-300', 'text-gray-700');
+            
+            // Attempt to load the TensorFlow.js model with a timeout
+            try {
+                modelLoadingAttempted = true;
+                
+                // Check if TensorFlow.js is available
+                if (!window.tf) {
+                    throw new Error("TensorFlow.js is not available in your browser");
+                }
+                
+                // Set a timeout to prevent infinite loading
+                const modelPromise = new Promise(async (resolve, reject) => {
+                    try {
+                        console.log("Loading TensorFlow.js model...");
+                        // First try to see if model is already in cache
+                        if (tfModel) {
+                            console.log("Model already loaded, using cached version");
+                            resolve(tfModel);
+                            return;
+                        }
+                        
+                        // Try to load the model
+                        const loadedModel = await cocoSsd.load({base: 'lite_mobilenet_v2'});
+                        console.log("Model loaded successfully:", loadedModel);
+                        resolve(loadedModel);
+                    } catch (error) {
+                        console.error("Error in model loading:", error);
+                        reject(error);
+                    }
+                });
+                
+                // Add a timeout of 15 seconds
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error("Model loading timed out after 15 seconds")), 15000);
+                });
+                
+                // Race between model loading and timeout
+                tfModel = await Promise.race([modelPromise, timeoutPromise]);
+                console.log("TensorFlow.js model loaded successfully");
+                loading.classList.add('hidden');
+            } catch (error) {
+                console.error('Error loading TF.js model:', error);
+                alert(`Failed to load browser-based detection model: ${error.message}\nSwitching back to server mode.`);
+                processingMode = 'server';
+                serverModeBtn.click();
+            } finally {
+                loading.classList.add('hidden');
+            }
+        });
+
+        // Image upload preview
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.onload = () => {
+                        // Set canvas size to match image
+                        detectionCanvas.width = imagePreview.naturalWidth;
+                        detectionCanvas.height = imagePreview.naturalHeight;
+                    };
+                    preview.classList.remove('hidden');
+                    detectButton.classList.remove('hidden');
+                    downloadImage.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Video upload preview
+        videoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                videoPlayer.src = url;
+                videoPreview.classList.remove('hidden');
+                startVideoDetection.classList.remove('hidden');
+                downloadVideo.classList.add('hidden');
+                recordedChunks = [];
+            }
+        });
+
+        // Video detection controls
+        startVideoDetection.addEventListener('click', () => {
+            if (!isVideoProcessing) {
+                isVideoProcessing = true;
+                startVideoDetection.classList.add('hidden');
+                stopVideoDetection.classList.remove('hidden');
+                startVideoObjectDetection();
+            }
+        });
+
+        stopVideoDetection.addEventListener('click', () => {
+            if (isVideoProcessing) {
+                isVideoProcessing = false;
+                stopVideoDetection.classList.add('hidden');
+                startVideoDetection.classList.remove('hidden');
+                clearInterval(videoDetectionInterval);
+                
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+            }
+        });
+
+        // Webcam handling
+        startWebcam.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                webcam.srcObject = stream;
+                startWebcam.classList.add('hidden');
+                startWebcamDetection.classList.remove('hidden');
+                
+                // Initialize the canvas size once we have the video dimensions
+                webcam.onloadedmetadata = () => {
+                    webcamCanvas.width = webcam.videoWidth;
+                    webcamCanvas.height = webcam.videoHeight;
+                };
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+                alert('Could not access webcam. Please make sure you have granted permission.');
+            }
+        });
+
+        // Start webcam detection
+        startWebcamDetection.addEventListener('click', () => {
+            if (!isWebcamProcessing) {
+                isWebcamProcessing = true;
+                startWebcamDetection.classList.add('hidden');
+                stopWebcamDetection.classList.remove('hidden');
+                startWebcamObjectDetection();
+            }
+        });
+
+        // Stop webcam detection
+        stopWebcamDetection.addEventListener('click', () => {
+            if (isWebcamProcessing) {
+                isWebcamProcessing = false;
+                stopWebcamDetection.classList.add('hidden');
+                startWebcamDetection.classList.remove('hidden');
+                clearInterval(webcamDetectionInterval);
+                results.classList.add('hidden');
+            }
+        });
+
+        // Process image when detect button is clicked
+        detectButton.addEventListener('click', () => {
+            const file = imageInput.files[0];
+            if (file) {
+                processImage(file);
+            } else {
+                alert('Please select an image first');
+            }
+        });
+
+        // Process image - modified to support both server and browser modes
+        async function processImage(imageBlob) {
+            if (!imageBlob) {
+                alert('Error: No image selected');
+                return;
+            }
+            
+            // Show loading indicator
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+
+            try {
+                let predictions;
+                
+                if (processingMode === 'server') {
+                    // Server-side processing
+                    const formData = new FormData();
+                    formData.append('image', imageBlob);
+
+                    console.log('Sending image to server for processing...');
+                    const response = await fetch(`${API_HOST}/detect`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Server response error:', errorText);
+                        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                    }
+
+                    predictions = await response.json();
+                    console.log('Received predictions from server:', predictions);
+                } else {
+                    // Browser-based processing using TensorFlow.js
+                    if (!tfModel) {
+                        console.log('TensorFlow model not loaded, loading now...');
+                        try {
+                            tfModel = await cocoSsd.load({base: 'lite_mobilenet_v2'});
+                        } catch (error) {
+                            console.error('Failed to load TensorFlow model:', error);
+                            throw new Error('Failed to load detection model. Try using server processing instead.');
+                        }
+                    }
+                    
+                    // Create image element from blob
+                    console.log('Processing image using browser-based TensorFlow.js');
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(imageBlob);
+                    await new Promise(resolve => {
+                        img.onload = resolve;
+                        img.onerror = () => {
+                            reject(new Error('Failed to load image'));
+                        };
+                    });
+                    
+                    // Get predictions from TensorFlow.js model
+                    const tfPredictions = await tfModel.detect(img);
+                    console.log('Browser model predictions:', tfPredictions);
+                    
+                    // Convert TF.js predictions to our format
+                    predictions = tfPredictions.map(pred => {
+                        const [x, y, width, height] = [
+                            pred.bbox[0] / img.width,
+                            pred.bbox[1] / img.height,
+                            pred.bbox[2] / img.width,
+                            pred.bbox[3] / img.height
+                        ];
+                        
+                        // Calculate estimated volume
+                        const pixel_to_real_world_ratio = 0.01;
+                        const real_width = width * img.width * pixel_to_real_world_ratio;
+                        const real_height = height * img.height * pixel_to_real_world_ratio;
+                        const estimated_depth = real_width * 0.7;
+                        const estimated_volume = real_width * real_height * estimated_depth;
+                        
+                        // Map to trash category
+                        const trashCategory = TRASH_CATEGORIES[pred.class.toLowerCase()] || 'mixed';
+                        
+                        return {
+                            class: trashCategory,
+                            detailed_class: pred.class,
+                            confidence: pred.score,
+                            bbox: [x, y, width, height],
+                            estimated_volume: Math.round(estimated_volume * 100) / 100
+                        };
+                    });
+                    
+                    // Filter out non-trash items based on our mapping
+                    predictions = predictions.filter(p => TRASH_CATEGORIES[p.detailed_class.toLowerCase()] || p.class !== 'mixed');
+                    
+                    URL.revokeObjectURL(img.src);
+                }
+                
+                // Draw the original image on canvas
+                const ctx = detectionCanvas.getContext('2d');
+                ctx.clearRect(0, 0, detectionCanvas.width, detectionCanvas.height);
+                ctx.drawImage(imagePreview, 0, 0, detectionCanvas.width, detectionCanvas.height);
+                
+                // Draw detections
+                drawDetections(ctx, predictions);
+                
+                // Show results and download button
+                displayResults(predictions);
+                downloadImage.classList.remove('hidden');
+                results.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error processing image:', error);
+                alert('Error processing image: ' + error.message);
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        async function startVideoObjectDetection() {
+            const videoContext = videoCanvas.getContext('2d');
+            videoCanvas.width = videoPlayer.videoWidth;
+            videoCanvas.height = videoPlayer.videoHeight;
+            
+            // Show the canvas next to the video
+            videoCanvas.classList.remove('hidden');
+            videoCanvas.classList.add('mt-4');
+            
+            // Setup MediaRecorder
+            const stream = videoCanvas.captureStream(30); // 30 FPS
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm;codecs=vp9'
+            });
+            
+            recordedChunks = [];
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                downloadVideo.classList.remove('hidden');
+            };
+            
+            // Start recording
+            mediaRecorder.start(1000); // Collect data every second
+            
+            results.classList.remove('hidden');
+            let errorCount = 0;
+            const maxErrors = 5;
+
+            videoDetectionInterval = setInterval(async () => {
+                if (!isVideoProcessing) return;
+                if (videoPlayer.paused || videoPlayer.ended) {
+                    stopVideoDetection.click();
+                    return;
+                }
+
+                try {
+                    // Draw the current video frame
+                    videoContext.drawImage(videoPlayer, 0, 0, videoCanvas.width, videoCanvas.height);
+                    
+                    const blob = await new Promise(resolve => {
+                        videoCanvas.toBlob(resolve, 'image/jpeg', 0.8);
+                    });
+
+                    const formData = new FormData();
+                    formData.append('image', blob, 'frame.jpg');
+
+                    const response = await fetch(`${API_HOST}/detect`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to process video frame');
+                    }
+
+                    const predictions = await response.json();
+                    
+                    // Clear previous frame
+                    videoContext.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
+                    // Redraw current frame
+                    videoContext.drawImage(videoPlayer, 0, 0, videoCanvas.width, videoCanvas.height);
+                    // Draw detections
+                    drawDetections(videoContext, predictions);
+                    
+                    displayResults(predictions);
+                    errorCount = 0; // Reset error count on success
+                } catch (error) {
+                    console.error('Error processing video frame:', error);
+                    errorCount++;
+                    
+                    if (errorCount >= maxErrors) {
+                        console.error('Too many errors, stopping video detection');
+                        stopVideoDetection.click();
+                        alert('Video detection stopped due to multiple errors. Please try again.');
+                    }
+                }
+            }, 1000/3); // Process 3 frames per second
+        }
+
+        // Modify webcam detection to support both modes
+        async function startWebcamObjectDetection() {
+            const webcamContext = webcamCanvas.getContext('2d');
+            webcamCanvas.classList.remove('hidden');
+            results.classList.remove('hidden');
+            
+            let errorCount = 0;
+            const maxErrors = 5;
+
+            webcamDetectionInterval = setInterval(async () => {
+                if (!isWebcamProcessing) return;
+
+                try {
+                    // Draw the current webcam frame
+                    webcamContext.drawImage(webcam, 0, 0, webcamCanvas.width, webcamCanvas.height);
+                    
+                    let predictions;
+                    
+                    if (processingMode === 'server') {
+                        // Server-side processing
+                        const blob = await new Promise(resolve => {
+                            webcamCanvas.toBlob(resolve, 'image/jpeg', 0.8);
+                        });
+
+                        const formData = new FormData();
+                        formData.append('image', blob, 'frame.jpg');
+
+                        const response = await fetch(`${API_HOST}/detect`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to process webcam frame');
+                        }
+
+                        predictions = await response.json();
+                    } else {
+                        // Browser-based processing
+                        if (!tfModel) {
+                            tfModel = await cocoSsd.load();
+                        }
+                        
+                        const tfPredictions = await tfModel.detect(webcamCanvas);
+                        
+                        // Convert TF.js predictions to our format
+                        predictions = tfPredictions.map(pred => {
+                            const [x, y, width, height] = [
+                                pred.bbox[0] / webcamCanvas.width,
+                                pred.bbox[1] / webcamCanvas.height,
+                                pred.bbox[2] / webcamCanvas.width,
+                                pred.bbox[3] / webcamCanvas.height
+                            ];
+                            
+                            // Calculate estimated volume
+                            const pixel_to_real_world_ratio = 0.01;
+                            const real_width = width * webcamCanvas.width * pixel_to_real_world_ratio;
+                            const real_height = height * webcamCanvas.height * pixel_to_real_world_ratio;
+                            const estimated_depth = real_width * 0.7;
+                            const estimated_volume = real_width * real_height * estimated_depth;
+                            
+                            // Map to trash category
+                            const trashCategory = TRASH_CATEGORIES[pred.class.toLowerCase()] || 'mixed';
+                            
+                            return {
+                                class: trashCategory,
+                                detailed_class: pred.class,
+                                confidence: pred.score,
+                                bbox: [x, y, width, height],
+                                estimated_volume: Math.round(estimated_volume * 100) / 100
+                            };
+                        });
+                        
+                        // Filter out non-trash items based on our mapping
+                        predictions = predictions.filter(p => TRASH_CATEGORIES[p.detailed_class.toLowerCase()] || p.class !== 'mixed');
+                    }
+                    
+                    // Clear the canvas and redraw the video frame
+                    webcamContext.clearRect(0, 0, webcamCanvas.width, webcamCanvas.height);
+                    webcamContext.drawImage(webcam, 0, 0, webcamCanvas.width, webcamCanvas.height);
+                    
+                    // Draw bounding boxes and labels
+                    drawDetections(webcamContext, predictions);
+                    
+                    displayResults(predictions);
+                    errorCount = 0; // Reset error count on success
+                } catch (error) {
+                    console.error('Error processing webcam frame:', error);
+                    errorCount++;
+                    
+                    if (errorCount >= maxErrors) {
+                        console.error('Too many errors, stopping webcam detection');
+                        stopWebcamDetection.click();
+                        alert('Webcam detection stopped due to multiple errors. Please try again.');
+                    }
+                }
+            }, 1000/3); // Reduced to 3 frames per second for better readability
+        }
+
+        function drawDetections(ctx, predictions) {
+            // Set styling for the bounding boxes
+            ctx.lineWidth = 3; // Increased line width
+            ctx.font = 'bold 16px Arial'; // Made font bold
+            ctx.textBaseline = 'top';
+
+            // Check if we have predictions in a nested format
+            let predictionsToUse = predictions;
+            if (predictions && typeof predictions === 'object' && predictions.predictions) {
+                predictionsToUse = predictions.predictions;
+            }
+
+            // Don't proceed if no valid predictions
+            if (!predictionsToUse || !Array.isArray(predictionsToUse) || predictionsToUse.length === 0) {
+                return;
+            }
+
+            predictionsToUse.forEach(pred => {
+                // Ensure we have a valid bounding box
+                if (!pred.bbox || !Array.isArray(pred.bbox) || pred.bbox.length !== 4) {
+                    console.warn('Invalid bounding box in prediction:', pred);
+                    return;
+                }
+                
+                const [x, y, width, height] = pred.bbox;
+                const confidence = typeof pred.confidence === 'number' ? pred.confidence : 
+                                  (typeof pred.confidence === 'string' ? parseFloat(pred.confidence) : 0.5);
+                
+                // Format the label: show material and detailed class if available
+                let label = '';
+                if (pred.class && pred.detailed_class && pred.class !== pred.detailed_class) {
+                    label = `${pred.class}: ${pred.detailed_class} ${(confidence * 100).toFixed(1)}%`;
+                } else {
+                    label = `${pred.class || 'unknown'} ${(confidence * 100).toFixed(1)}%`;
+                }
+                
+                // Convert normalized coordinates to pixel coordinates
+                const boxX = x * ctx.canvas.width;
+                const boxY = y * ctx.canvas.height;
+                const boxWidth = width * ctx.canvas.width;
+                const boxHeight = height * ctx.canvas.height;
+
+                // Get color for the class
+                const classToUse = (pred.class || 'unknown').toLowerCase();
+                let hue;
+                
+                // Use consistent colors for known material types
+                switch (classToUse) {
+                    case 'plastic':
+                        hue = 210; // Blue
+                        break;
+                    case 'glass':
+                        hue = 270; // Purple
+                        break;
+                    case 'metal':
+                        hue = 0; // Red
+                        break;
+                    case 'paper':
+                        hue = 40; // Yellow/amber
+                        break;
+                    case 'organic':
+                        hue = 120; // Green
+                        break;
+                    default:
+                        // Generate a consistent hue based on class name
+                        hue = Math.abs(classToUse.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 360;
+                }
+                
+                // Enhanced drawing style with rounded corners
+                const cornerRadius = 8; // Radius for rounded corners
+                const strokeColor = `hsl(${hue}, 100%, 50%)`;
+                const fillColor = `hsla(${hue}, 100%, 50%, 0.15)`; // Semi-transparent fill
+                
+                ctx.strokeStyle = strokeColor;
+                ctx.fillStyle = fillColor;
+                
+                // Draw rounded rectangle with fill
+                drawRoundedRect(ctx, boxX, boxY, boxWidth, boxHeight, cornerRadius, true, true);
+                
+                // Calculate where to place the label (top of bounding box)
+                const textWidth = ctx.measureText(label).width;
+                const textBgHeight = 24;
+                const textBgWidth = textWidth + 10;
+                const textBgX = boxX;
+                const textBgY = Math.max(boxY - textBgHeight - 2, 0); // Ensure it's visible
+                
+                // Draw label background (with rounded top corners)
+                ctx.fillStyle = `hsla(${hue}, 100%, 30%, 0.9)`;
+                drawRoundedRect(ctx, textBgX, textBgY, textBgWidth, textBgHeight, 
+                                4, true, false, true, true, false, false);
+                
+                // Draw label text
+                ctx.fillStyle = 'white';
+                ctx.fillText(label, textBgX + 5, textBgY + 4);
+            });
+        }
+        
+        // Helper function to draw rounded rectangles
+        function drawRoundedRect(ctx, x, y, width, height, radius, fill, stroke, 
+                                topLeftRound = true, topRightRound = true, 
+                                bottomRightRound = true, bottomLeftRound = true) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            
+            // Top edge and top-right corner
+            ctx.lineTo(x + width - (topRightRound ? radius : 0), y);
+            if (topRightRound) {
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            }
+            
+            // Right edge and bottom-right corner
+            ctx.lineTo(x + width, y + height - (bottomRightRound ? radius : 0));
+            if (bottomRightRound) {
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            }
+            
+            // Bottom edge and bottom-left corner
+            ctx.lineTo(x + (bottomLeftRound ? radius : 0), y + height);
+            if (bottomLeftRound) {
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            }
+            
+            // Left edge and top-left corner
+            ctx.lineTo(x, y + (topLeftRound ? radius : 0));
+            if (topLeftRound) {
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+            }
+            
+            if (fill) {
+                ctx.fill();
+            }
+            if (stroke) {
+                ctx.stroke();
+            }
+        }
+
+        function displayResults(detections) {
+            const resultsContainer = document.getElementById('detectionResults');
+            resultsContainer.innerHTML = '';
+            
+            // Check if we have detections data or if it's in a nested format
+            let predictionsToUse = detections;
+            if (detections && typeof detections === 'object' && detections.predictions) {
+                predictionsToUse = detections.predictions;
+            }
+            
+            if (!predictionsToUse || predictionsToUse.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-center text-gray-500">No garbage detected</p>';
+                return;
+            }
+            
+            // If we have metadata, show it
+            if (detections && detections.metadata) {
+                const metaInfo = document.createElement('div');
+                metaInfo.className = 'p-2 bg-gray-100 rounded-lg mb-3 text-xs';
+                
+                // Build the metadata display HTML
+                let metaHtml = `
+                    <p><strong>Model:</strong> ${detections.metadata.model_version || 'Standard'}</p>
+                    <p><strong>Processing time:</strong> ${detections.metadata.processing_time ? 
+                        detections.metadata.processing_time.toFixed(2) + 's' : 'N/A'}</p>
+                `;
+                
+                // Add shapes detected if available
+                if (detections.metadata.shapes_detected && detections.metadata.shapes_detected.length > 0) {
+                    const shapesText = detections.metadata.shapes_detected.join(', ');
+                    metaHtml += `<p><strong>Shapes detected:</strong> ${shapesText}</p>`;
+                }
+                
+                metaInfo.innerHTML = metaHtml;
+                resultsContainer.appendChild(metaInfo);
+            }
+            
+            // Group detections by class
+            const groupedByClass = {};
+            let totalVolume = 0;
+            
+            predictionsToUse.forEach(detection => {
+                // Ensure class is lowercase for consistent grouping
+                const classKey = detection.class.toLowerCase();
+                
+                if (!groupedByClass[classKey]) {
+                    groupedByClass[classKey] = [];
+                }
+                groupedByClass[classKey].push(detection);
+                
+                // Add to total volume if available
+                if (detection.estimated_volume) {
+                    totalVolume += detection.estimated_volume;
+                }
+            });
+            
+            // Add processing mode info
+            const modeIndicator = document.createElement('div');
+            modeIndicator.className = 'p-2 bg-gray-200 rounded-lg mb-4 text-center';
+            modeIndicator.innerHTML = `
+                <p class="text-sm font-medium">
+                    Processing Mode: 
+                    <span class="${processingMode === 'server' ? 'text-blue-600' : 'text-green-600'}">
+                        ${processingMode === 'server' ? 'Server-side ML' : 'Browser TensorFlow.js'}
+                    </span>
+                </p>
+            `;
+            resultsContainer.appendChild(modeIndicator);
+            
+            // Add total volume section
+            if (totalVolume > 0) {
+                const volumeSection = document.createElement('div');
+                volumeSection.className = 'p-4 bg-yellow-50 rounded-lg mb-4';
+                volumeSection.innerHTML = `
+                    <h3 class="font-bold text-lg">Total Estimated Volume</h3>
+                    <p class="text-2xl font-bold">${totalVolume.toFixed(2)} cubic units</p>
+                    <p class="text-xs text-gray-500">This is an approximate estimate based on visible dimensions</p>
+                `;
+                resultsContainer.appendChild(volumeSection);
+            }
+            
+            // Create results HTML
+            for (const className in groupedByClass) {
+                const detections = groupedByClass[className];
+                const count = detections.length;
+                const avgConfidence = detections.reduce((sum, d) => sum + d.confidence, 0) / count;
+                
+                // Sum the volumes for this class
+                const classVolume = detections.reduce((sum, d) => sum + (d.estimated_volume || 0), 0);
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = 'p-4 bg-gray-50 rounded-lg mb-2';
+                
+                // Get appropriate icon and color based on waste type
+                let icon = '🗑️';
+                let bgColor = 'bg-gray-200';
+                let textColor = 'text-gray-800';
+                
+                switch(className.toLowerCase()) {
+                    case 'plastic':
+                        icon = '🥤';
+                        bgColor = 'bg-blue-100';
+                        textColor = 'text-blue-800';
+                        break;
+                    case 'paper':
+                        icon = '📄';
+                        bgColor = 'bg-yellow-100';
+                        textColor = 'text-yellow-800';
+                        break;
+                    case 'metal':
+                        icon = '🥫';
+                        bgColor = 'bg-gray-300';
+                        textColor = 'text-gray-800';
+                        break;
+                    case 'glass':
+                        icon = '🍶';
+                        bgColor = 'bg-indigo-100';
+                        textColor = 'text-indigo-800';
+                        break;
+                    case 'organic':
+                        icon = '🍎';
+                        bgColor = 'bg-green-100';
+                        textColor = 'text-green-800';
+                        break;
+                    case 'mixed':
+                        icon = '🗑️';
+                        bgColor = 'bg-purple-100';
+                        textColor = 'text-purple-800';
+                        break;
+                }
+                
+                // Collect shape information from detections
+                const shapeInfo = detections.map(d => d.shape_info).filter(Boolean);
+                const shapesFound = [...new Set(shapeInfo)]; // Unique shapes
+                
+                let shapeText = '';
+                if (shapesFound.length > 0) {
+                    const shapeNames = {
+                        "cylindrical": "Cylindrical",
+                        "tall_cylindrical": "Tall Bottle",
+                        "round": "Round",
+                        "square_or_round": "Container",
+                        "rectangular": "Box",
+                        "flat_rectangular": "Flat Item"
+                    };
+                    
+                    const shapeLabels = shapesFound.map(s => shapeNames[s] || s);
+                    shapeText = `<div class="text-xs ${textColor} mt-1">Shape: ${shapeLabels.join(', ')}</div>`;
+                }
+                
+                resultItem.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="inline-block mr-2 text-xl">${icon}</span>
+                            <span class="font-medium ${textColor}">${className}</span>
+                        </div>
+                        <div class="text-gray-500">
+                            <span class="${bgColor} px-2 py-1 rounded text-xs">${count} items</span>
+                            <span class="${bgColor} px-2 py-1 rounded text-xs ml-2">${Math.round(avgConfidence * 100)}% confidence</span>
+                        </div>
+                    </div>
+                    ${shapeText}
+                    ${classVolume > 0 ? `
+                    <div class="mt-2 text-sm">
+                        <span class="font-medium">Volume:</span> ${classVolume.toFixed(2)} cubic units
+                    </div>` : ''}
+                    <div class="mt-2 text-xs text-gray-500">
+                        ${detections.map(d => d.detailed_class).join(', ')}
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(resultItem);
+            }
+        }
+
+        // Add download video handler
+        downloadVideo.addEventListener('click', () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'processed-video.webm';
+            a.click();
+            URL.revokeObjectURL(url);
+            downloadVideo.classList.add('hidden');
+        });
+
+        // Add download image handler
+        downloadImage.addEventListener('click', () => {
+            const dataUrl = detectionCanvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = 'processed-image.png';
+            a.click();
+        });
+
+        // ESP32-CAM Integration
+        const esp32CamUrl = document.getElementById('esp32CamUrl');
+        const connectEsp32Cam = document.getElementById('connectEsp32Cam');
+        const esp32CamImage = document.getElementById('esp32CamImage');
+        const esp32CamCanvas = document.getElementById('esp32CamCanvas');
+        const startEsp32Detection = document.getElementById('startEsp32Detection');
+        const stopEsp32Detection = document.getElementById('stopEsp32Detection');
+        const captureEsp32Image = document.getElementById('captureEsp32Image');
+        const esp32Status = document.getElementById('esp32Status');
+        
+        let esp32StreamInterval;
+        let esp32DetectionInterval;
+        let esp32Connected = false;
+        
+        // Connect to ESP32-CAM
+        connectEsp32Cam.addEventListener('click', () => {
+            const ipAddress = esp32CamUrl.value.trim();
+            if (!ipAddress) {
+                esp32Status.textContent = 'Please enter a valid IP address';
+                esp32Status.classList.add('text-red-500');
+                return;
+            }
+            
+            // Clear any existing intervals
+            if (esp32StreamInterval) clearInterval(esp32StreamInterval);
+            if (esp32DetectionInterval) clearInterval(esp32DetectionInterval);
+            
+            esp32Status.textContent = 'Connecting...';
+            esp32Status.classList.remove('text-red-500');
+            esp32Status.classList.add('text-blue-500');
+            
+            // Test connection by loading the stream
+            const streamUrl = `http://${ipAddress}/stream`;
+            esp32CamImage.src = streamUrl;
+            
+            esp32CamImage.onload = () => {
+                esp32Connected = true;
+                esp32Status.textContent = 'Connected to ESP32-CAM';
+                esp32Status.classList.remove('text-blue-500');
+                esp32Status.classList.add('text-green-500');
+                
+                // Show detection buttons
+                startEsp32Detection.classList.remove('hidden');
+                captureEsp32Image.classList.remove('hidden');
+                
+                // Setup canvas
+                esp32CamCanvas.width = esp32CamImage.width;
+                esp32CamCanvas.height = esp32CamImage.height;
+            };
+            
+            esp32CamImage.onerror = () => {
+                esp32Connected = false;
+                esp32Status.textContent = 'Failed to connect to ESP32-CAM';
+                esp32Status.classList.remove('text-blue-500');
+                esp32Status.classList.add('text-red-500');
+                
+                // Hide detection buttons
+                startEsp32Detection.classList.add('hidden');
+                stopEsp32Detection.classList.add('hidden');
+                captureEsp32Image.classList.add('hidden');
+            };
+        });
+        
+        // Start ESP32-CAM Object Detection
+        startEsp32Detection.addEventListener('click', () => {
+            if (!esp32Connected) return;
+            
+            startEsp32Detection.classList.add('hidden');
+            stopEsp32Detection.classList.remove('hidden');
+            
+            // Start detection interval
+            esp32DetectionInterval = setInterval(() => {
+                captureAndDetectFromEsp32();
+            }, 2000); // Detect every 2 seconds
+        });
+        
+        // Stop ESP32-CAM Object Detection
+        stopEsp32Detection.addEventListener('click', () => {
+            stopEsp32Detection.classList.add('hidden');
+            startEsp32Detection.classList.remove('hidden');
+            
+            if (esp32DetectionInterval) {
+                clearInterval(esp32DetectionInterval);
+                esp32DetectionInterval = null;
+            }
+        });
+        
+        // Capture and detect a single image from ESP32-CAM
+        captureEsp32Image.addEventListener('click', () => {
+            if (!esp32Connected) return;
+            captureAndDetectFromEsp32();
+        });
+        
+        // Function to capture and send image for detection
+        function captureAndDetectFromEsp32() {
+            const ipAddress = esp32CamUrl.value.trim();
+            if (!ipAddress) return;
+            
+            const captureUrl = `http://${ipAddress}/capture`;
+            
+            // Show loading
+            loading.classList.remove('hidden');
+            
+            // Fetch the image from ESP32-CAM
+            fetch(captureUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    // Create form data with the image
+                    const formData = new FormData();
+                    formData.append('image', blob, 'esp32cam.jpg');
+                    
+                    // Send to our ML server for detection
+                    return fetch('/detect', {
+                        method: 'POST',
+                        body: formData
+                    });
+                })
+                .then(response => response.json())
+                .then(detections => {
+                    // Hide loading
+                    loading.classList.add('hidden');
+                    
+                    // Draw detections on canvas
+                    drawDetectionsOnCanvas(detections, esp32CamCanvas, esp32CamImage.width, esp32CamImage.height);
+                    
+                    // Display results
+                    displayResults(detections);
+                    results.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error capturing or detecting image:', error);
+                    loading.classList.add('hidden');
+                    esp32Status.textContent = 'Error: ' + error.message;
+                    esp32Status.classList.add('text-red-500');
+                });
+        }
+        
+        // Function to draw detections on a canvas
+        function drawDetectionsOnCanvas(detections, canvas, width, height) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (!detections || detections.length === 0) return;
+            
+            // Set canvas dimensions
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Draw each detection
+            detections.forEach(detection => {
+                const [x, y, w, h] = detection.bbox;
+                const realX = x * width;
+                const realY = y * height;
+                const realWidth = w * width;
+                const realHeight = h * height;
+                
+                // Draw bounding box
+                ctx.strokeStyle = getColorForClass(detection.class);
+                ctx.lineWidth = 3;
+                ctx.strokeRect(realX, realY, realWidth, realHeight);
+                
+                // Draw label background
+                ctx.fillStyle = getColorForClass(detection.class);
+                const label = `${detection.class} ${Math.round(detection.confidence * 100)}%`;
+                const textMetrics = ctx.measureText(label);
+                const textWidth = textMetrics.width;
+                ctx.fillRect(realX, realY - 25, textWidth + 10, 25);
+                
+                // Draw label text
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Arial';
+                ctx.fillText(label, realX + 5, realY - 7);
+            });
+        }
+        
+        // Function to get a color for a class
+        function getColorForClass(className) {
+            // Simple hash function to convert class name to a color
+            let hash = 0;
+            for (let i = 0; i < className.length; i++) {
+                hash = className.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            
+            // Generate HSL color with good saturation and lightness for visibility
+            const hue = hash % 360;
+            return `hsl(${hue}, 80%, 50%)`;
+        }
+    </script>
+</body>
+</html> 

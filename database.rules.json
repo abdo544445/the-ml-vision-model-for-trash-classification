@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "predictions": {
+      ".read": true,
+      ".write": false,
+      "$predictionId": {
+        ".validate": "newData.hasChildren(['timestamp', 'results', 'imageUrl'])"
+      }
+    }
+  }
+} 
