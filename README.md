@@ -25,8 +25,8 @@ An advanced AI-powered system for detecting and classifying different types of t
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/abdo544445/trash-detection-ai.git
-cd trash-detection-ai
+https://github.com/abdo544445/the-ml-vision-model-for-trash-classification
+cd the-ml-vision-model-for-trash-classification
 ```
 
 2. Install the required dependencies:
